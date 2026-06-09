@@ -7,9 +7,9 @@
 [![PSR-12](https://img.shields.io/badge/Code%20Style-PSR--12-blue.svg)](phpcs.xml)
 [![Coverage](https://img.shields.io/badge/Coverage-95.14%25-brightgreen.svg)](https://github.com/jardisSupport/secret)
 
-> Part of the **[Jardis Business Platform](https://jardis.io)** — Enterprise-grade PHP components for Domain-Driven Design
+> Part of **[Jardis](https://jardis.io)** — the Domain-Driven Design platform for PHP. You model your domain; Jardis generates the production-ready hexagonal code (DTOs, Command/Query handlers, repositories, persistence). This package is part of the open-source foundation that generated code runs on.
 
-Secret resolution for encrypted configuration values. Encrypt secrets with AES-256-GCM or Sodium, store them safely in `.env` files, and decrypt transparently at load time. Plugs into the DotEnv cast chain — no manual decryption calls needed.
+Encrypted .env secrets for PHP — encrypt configuration values with AES-256-GCM or Sodium, store them safely in `.env` files, and decrypt transparently at load time. Plugs into the DotEnv cast chain — no manual decryption calls needed.
 
 ---
 
