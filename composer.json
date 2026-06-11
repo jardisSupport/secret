@@ -1,6 +1,6 @@
 {
     "name": "jardissupport/secret",
-    "homepage": "https://docs.jardis.io/en/support/secret",
+    "homepage": "https://jardis.io",
     "description": "Secret resolution for encrypted configuration values using AES-256-GCM and Sodium with key provider abstraction",
     "type": "library",
     "license": "MIT",
@@ -8,8 +8,8 @@
     "prefer-stable": true,
     "authors": [
         {
-            "name": "Jardis Core Development",
-            "email": "jardisCore@headgent.dev"
+            "name": "Jardis Development",
+            "email": "jardisDev@headgent.com"
         }
     ],
     "require": {
@@ -25,7 +25,8 @@
     },
     "suggest": {
         "ext-openssl": "Required for AES-256-GCM encryption (AesSecretResolver)",
-        "ext-sodium": "Required for Sodium encryption (SodiumSecretResolver)"
+        "ext-sodium": "Required for Sodium encryption (SodiumSecretResolver)",
+        "jardissupport/dotenv": "Enables transparent secret decryption via the DotEnv cast chain (DotEnv::addHandler())"
     },
     "autoload": {
         "psr-4": {
@@ -36,8 +37,10 @@
         "psr-4": {
             "JardisSupport\\Secret\\Tests\\": "tests/"
         }
-    },    "support": {
+    },
+    "support": {
         "issues": "https://github.com/jardisSupport/secret/issues",
+        "docs": "https://docs.jardis.io/en/support/secret",
         "email": "jardisDev@headgent.com"
     },
     "keywords": [
@@ -50,8 +53,7 @@
         "environment",
         "domain-driven-design",
         "php",
-        "jardisSupport",
-        "jardisport",
+        "jardissupport",
         "jardis",
         "headgent"
     ]
