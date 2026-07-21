@@ -38,7 +38,7 @@ SecretHandler (convenience — wires everything)
 
 **Chain order:** register specific resolvers (Sodium) BEFORE the AES catch-all.
 
-## INTERFACE (jardissupport/contract)
+## INTERFACE (jardissupport/contracts)
 ```php
 interface SecretResolverInterface {
     public function supports(string $encryptedValue): bool;
