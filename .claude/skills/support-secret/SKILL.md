@@ -11,18 +11,6 @@ next: []
 # SECRET_COMPONENT_SKILL
 > jardissupport/secret | NS: `JardisSupport\Secret` | PHP 8.2+ | ext-openssl, ext-sodium
 
-## ARCHITECTURE
-```
-SecretHandler (convenience — wires everything)
-  └─ Secret (DotEnv cast plugin — detects secret(...) marker)
-       └─ SecretResolverChain (chain-of-responsibility, immutable)
-            ├─ SodiumSecretResolver  prefix: "sodium:"  XSalsa20-Poly1305
-            └─ AesSecretResolver     prefix: "aes:" optional, catch-all fallback
-                 Key: string | callable (lazy)
-                   ├─ FileKeyProvider  (reads file, auto-detects base64)
-                   └─ EnvKeyProvider   (reads getenv(), auto-detects base64)
-```
-
 ## ENCRYPTION FORMATS
 | Resolver | Algorithm | Key | Nonce | Format |
 |----------|-----------|-----|-------|--------|
