@@ -9,7 +9,7 @@ next: []
 ---
 
 # SECRET_COMPONENT_SKILL
-> jardissupport/secret | NS: `JardisSupport\Secret` | PHP 8.2+ | ext-openssl, ext-sodium
+> jardissupport/secret v1.1 | NS: `JardisSupport\Secret` | PHP 8.2+ | ext-openssl, ext-sodium
 
 ## ENCRYPTION FORMATS
 | Resolver | Algorithm | Key | Nonce | Format |
@@ -44,6 +44,8 @@ $handler($value);  // __invoke(?string): ?string
 new Secret(?SecretResolverInterface $resolver = null);
 $caster($value);   // __invoke(?string): ?string
 // null → null | "plain" → "plain" | "secret(x)" → resolve("x") | no resolver → unchanged
+Secret::PATTERN;                     // '/^secret\((.+)\)$/' — the one marker format
+Secret::matches(string $value): bool // static format check, no resolver/key/decryption
 
 // SecretResolverChain — immutable
 new SecretResolverChain(array $resolvers = []);
@@ -61,6 +63,20 @@ SodiumSecretResolver::encrypt(string $plaintext, string|callable $key): string  
 new FileKeyProvider(string $path);   // auto-detects base64 vs raw
 new EnvKeyProvider(string $envVar);  // auto-detects base64 vs raw
 ```
+
+## MARKER DETECTION
+```php
+use JardisSupport\Secret\Secret;
+
+Secret::matches('secret(base64value)');       // true
+Secret::matches('secret(sodium:base64value)');// true
+Secret::matches('plain-value');               // false
+Secret::matches('Secret(x)');                 // false — case-sensitive
+Secret::matches('secret()');                  // false — payload must be non-empty
+```
+Same rule `__invoke()` applies before resolving. Consumers (e.g. a kernel bootstrap asking
+"is this value a ciphertext marker?") use `Secret::matches()` / `Secret::PATTERN` — **never**
+a copied regex.
 
 ## USAGE — DOTENV INTEGRATION (recommended)
 ```php
@@ -99,4 +115,5 @@ make encrypt KEY_FILE=other.key VALUE="x"  # custom key file
 
 ## RULES
 - **NEVER** store key in code/repo/`.env`; call `encrypt()` at runtime; register AES catch-all BEFORE specific resolvers
+- **NEVER** duplicate the `secret(...)` regex in a consumer — call `Secret::matches()` (or reference `Secret::PATTERN`)
 - **ALWAYS** `addHandler($handler, prepend: true)` for DotEnv integration; store key separately from ciphertext; Sodium BEFORE AES in chain; `*.key` in `.gitignore`
