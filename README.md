@@ -21,6 +21,7 @@ Encrypted .env secrets for PHP — encrypt configuration values with AES-256-GCM
 - **Resolver Chain** — `SecretResolverChain` delegates to the first resolver whose prefix matches the encrypted value
 - **Key Providers** — `FileKeyProvider` reads a 32-byte key from a file; `EnvKeyProvider` reads from an environment variable; both auto-detect base64 encoding
 - **Makefile Tooling** — `make generate-key-file`, `make encrypt`, and `make encrypt-sodium` for setup and secret rotation
+- **Marker Detection** — `Secret::matches()` answers "is this value a `secret(...)` marker?" without duplicating the format
 - **Typed Exceptions** — `InvalidKeyException`, `DecryptionFailedException`, and `EncryptionFailedException` for precise error handling
 
 ---
@@ -62,6 +63,28 @@ $dotEnv->addHandler(
 $config = $dotEnv->loadPrivate('/path/to/app');
 // $config['DB_PASSWORD'] → decrypted plaintext, no secret() wrapper
 ```
+
+## Detecting a secret marker
+
+Consumers that need to know whether a raw configuration value carries the `secret(...)`
+marker — a bootstrap deciding whether a key file is required, a diagnostics view masking
+encrypted entries — ask the package instead of copying the regex:
+
+```php
+use JardisSupport\Secret\Secret;
+
+Secret::matches('secret(base64encodedEncryptedValue)');  // true
+Secret::matches('secret(sodium:base64value)');           // true
+Secret::matches('no-encryption-needed');                 // false
+Secret::matches('Secret(value)');                        // false — the marker is case-sensitive
+Secret::matches('secret()');                             // false — the payload must not be empty
+
+// The expression itself, if you really need it:
+Secret::PATTERN;  // '/^secret\((.+)\)$/'
+```
+
+`matches()` is static and stateless: it applies exactly the rule `Secret::__invoke()` uses to
+decide whether to resolve, but touches no resolver, no key and no decryption.
 
 ## Advanced Usage
 

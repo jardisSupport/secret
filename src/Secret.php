@@ -20,9 +20,28 @@ use JardisSupport\Contract\Secret\SecretResolverInterface;
  */
 class Secret
 {
+    /**
+     * The one marker format of this package: `secret(<payload>)`, payload captured in group 1.
+     *
+     * Public so that consumers (e.g. a kernel bootstrap) can reason about the format
+     * without duplicating the expression.
+     */
+    public const PATTERN = '/^secret\((.+)\)$/';
+
     public function __construct(
         private readonly ?SecretResolverInterface $resolver = null
     ) {
+    }
+
+    /**
+     * Reports whether a value carries the `secret(...)` marker.
+     *
+     * Answers exactly the question `__invoke()` asks before it resolves — no
+     * resolver, no key and no decryption involved, purely a format check.
+     */
+    public static function matches(string $value): bool
+    {
+        return preg_match(self::PATTERN, $value) === 1;
     }
 
     /**
@@ -39,7 +58,7 @@ class Secret
             return null;
         }
 
-        if (preg_match('/^secret\((.+)\)$/', $value, $matches) !== 1) {
+        if (preg_match(self::PATTERN, $value, $matches) !== 1) {
             return $value;
         }
 
