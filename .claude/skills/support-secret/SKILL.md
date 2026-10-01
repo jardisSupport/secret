@@ -4,7 +4,7 @@ description: Encrypted .env secret resolution (AES-256-GCM, Sodium). Use for Sec
 user-invocable: false
 zone: post-active
 persona: C
-prerequisites: [rules-architecture, rules-patterns, support-dotenv]
+prerequisites: [foundation-architecture, foundation-patterns, support-dotenv]
 next: []
 ---
 
